@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import Track from "./Track";
 
 function SearchResults({ tracks }) {
@@ -11,6 +12,11 @@ function SearchResults({ tracks }) {
       ))}
     </div>
   );
+=======
+
+function SearchResults() {
+  return <div className="SearchResults"></div>;
+>>>>>>> f5707cd (added skeleton files and updated App.js)
 }
 
 export default SearchResults;
