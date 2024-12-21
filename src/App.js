@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import SearchResults from "./components/SearchResults";
 import Playlist from "./components/Playlist";
+import Spotify from "./util/Spotify";
+import SearchBar from "./components/SearchBar";
+
+// window.Spotify = Spotify; // Make Spotify accessible globally for debugging
 
 function App() {
   ///saving playlist
@@ -9,12 +13,16 @@ function App() {
     const trackUris = playlistTracks.map((track) => track.uri);
 
     ///step 2:Simulate saving to Spotify
-    console.log("Saving playlist with these URIs:", trackUris);
+    // console.log("Saving playlist with these URIs:", trackUris);
+    Spotify.savePlaylist(playlistName, trackUris).then(() => {
+      setPlaylistName("New Playlist");
+      setPlaylistTracks([]);
+    });
 
     //step 3:Reset the playlist name and tracks
 
-    setPlaylistName("New Playlist");
-    setPlaylistTracks([]);
+    // setPlaylistName("New Playlist");
+    // setPlaylistTracks([]);
   };
   //State for playlist name and tracks
   const [playlistName, setPlaylistName] = useState("New Playlist");
@@ -43,11 +51,13 @@ function App() {
     },
   ]);
 
-  const [searchResults, setSearchResults] = useState([
-    { id: 1, name: "Song 1", artist: "Artist 1", album: "Album 1" },
-    { id: 2, name: "Song 2", artist: "Artist 2", album: "Album 2" },
-    { id: 3, name: "Song 3", artist: "Artist 3", album: "Album 3" },
-  ]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = (term) => {
+    Spotify.search(term).then((tracks) => {
+      setSearchResults(tracks); ///Update state with searchresults
+    });
+  };
 
   ///Add track to playlist
   const addTrack = (track) => {
@@ -79,6 +89,7 @@ function App() {
   return (
     <div className="App">
       {/* Pass down the tracks array as props to SearchResults */}
+      <SearchBar onSearch={handleSearch} />
 
       <Playlist
         playlistName={playlistName}
@@ -92,5 +103,5 @@ function App() {
     </div>
   );
 }
-
+// Spotify.getAccessToken();
 export default App;
